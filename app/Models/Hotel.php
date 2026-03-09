@@ -12,6 +12,8 @@ class Hotel extends Model
         'description',
         'address',
         'state',
+        'category',
+        'image'
     ];
 
     public function rooms()

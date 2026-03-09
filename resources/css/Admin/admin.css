@@ -1,0 +1,198 @@
+body{
+    margin:0;
+    font-family:Arial;
+}
+
+/* HEADER */
+
+.admin-header{
+    height:60px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 20px;
+    background:#fff;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    z-index:2000;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-toggle{
+    font-size:24px;
+    cursor:pointer;
+    display:none;
+}
+
+.logo{
+    font-weight:bold;
+}
+
+.avatar-small{
+    width:40px;
+    border-radius:50%;
+}
+
+
+/* LAYOUT */
+
+.admin-container{
+    display:flex;
+}
+
+/* SIDEBAR */
+
+.admin-sidebar{
+    width:250px;
+    background:#2f3e4e;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    z-index:1000;
+}
+
+.sidebar-top{
+    text-align:center;
+    padding:20px;
+}
+
+.avatar-large{
+    width:80px;
+    border-radius:50%;
+}
+
+
+/* MENU */
+
+.sidebar-menu ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.sidebar-menu li.active-link {
+    background:#1d2a38;
+}
+
+.sidebar-menu li{
+    padding:12px 20px;
+}
+
+.sidebar-menu a{
+    color:white;
+    text-decoration:none;
+    display:block;
+}
+
+.sidebar-menu > ul > li:hover{
+    background:#3d4f63;
+}
+
+.submenu li:hover{
+    background:#3d4f63;
+}
+
+/* .submenu li.active-link{
+    background:#c5c5c5;
+} */
+
+/* .submenu li.active-link a{
+    color:#000;
+} */
+
+/* dropdown */
+
+.menu-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+}
+
+.arrow{
+    transition:0.3s;
+}
+
+.submenu{
+    max-height:0;
+    overflow:hidden;
+    transition:0.3s;
+    padding-left:15px;
+}
+
+.menu-item.active .submenu{
+    max-height:200px;
+}
+
+.menu-item.active .arrow{
+    transform:rotate(-90deg);
+}
+
+
+/* CONTENT */
+
+.admin-content{
+    flex:1;
+    padding:20px;
+    background:#f4f6f8;
+    min-height:100vh;
+}
+
+
+/* SIDEBAR BOTTOM */
+
+.sidebar-bottom{
+    margin-top:auto;
+    padding:20px;
+}
+
+.logout-btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    background:#e74c3c;
+    color:white;
+    cursor:pointer;
+}
+
+/* TABLET */
+
+@media (max-width:1024px){
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .admin-sidebar{
+        position:fixed;
+        left:-250px;
+        top:0;
+        height:100%;
+        transition:0.3s;
+        z-index:1000;
+    }
+
+    .admin-sidebar.active{
+        left:0;
+    }
+
+    .admin-content{
+        margin-left:0;
+    }
+}
+
+
+/* PHONE */
+
+@media (max-width:768px){
+
+    .admin-content{
+        padding:15px;
+    }
+
+}
