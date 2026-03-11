@@ -13,7 +13,7 @@ class Room extends Model
         'type',
         'capacity',
         'price',
-        'status',
+        'total_rooms',
     ];
 
     public function hotel()
@@ -27,14 +27,21 @@ class Room extends Model
     }
 
     // room availability logic
-    public function isAvailable($checkIn, $checkOut)
+    public function availableQuantity($checkIn, $checkOut)
     {
-        return !$this->bookings()
-            ->where('status', 'confirmed')
+        $bookedRooms = $this->bookings()
+            ->whereIn('status', ['pending', 'confirmed'])
             ->where(function ($query) use ($checkIn, $checkOut) {
                 $query->where('check_in', '<', $checkOut)
-                    ->where('check_out', '>', $checkIn);
+                      ->where('check_out', '>', $checkIn);
             })
-            ->exists();
+            ->sum('room_quantity'); 
+
+        return $this->total_rooms - $bookedRooms;
+    }
+
+    public function isAvailable($checkIn, $checkOut, $requestedQuantity = 1)
+    {
+        return $this->availableQuantity($checkIn, $checkOut) >= $requestedQuantity;
     }
 }

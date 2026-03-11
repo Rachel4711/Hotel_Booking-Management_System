@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('address');
             $table->string('state');
             $table->timestamps();
-             // $table->enum('category', ['KL', 'Penang', 'Johor']);
-             // $table->string('image');
+            $table->text('policies')->nullable();
+             $table->enum('category', ['KL', 'Penang', 'Johor', 'Melaka']);
+             $table->string('cover_image');
+             $table->json('images')->nullable();
         });
     }
 

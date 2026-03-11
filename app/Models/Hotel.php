@@ -13,7 +13,14 @@ class Hotel extends Model
         'address',
         'state',
         'category',
-        'image'
+        'image',
+        'policies',
+        'cover_image',
+        'images'
+    ];
+
+    protected $casts = [
+        'images' => 'array',
     ];
 
     public function rooms()

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('type', ['single','double','king','queen']);
             $table->integer('capacity');
             $table->decimal('price', 10, 2);
-            $table->enum('status', ['available','unavailable'])->default('available');
+            $table->integer('total_rooms')->default(1);
             $table->timestamps();
         });
     }

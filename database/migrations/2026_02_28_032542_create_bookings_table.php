@@ -22,6 +22,8 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->date('check_in');
             $table->date('check_out');
+            $table->integer('room_quantity')->default(1); 
+            $table->integer('guest_count')->default(1);
             $table->decimal('total_price', 10, 2);
             $table->enum('status', ['pending','confirmed','cancelled'])->default('pending');
             $table->enum('payment_status', ['unpaid','paid'])->default('unpaid');

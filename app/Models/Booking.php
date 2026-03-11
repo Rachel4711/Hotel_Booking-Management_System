@@ -13,6 +13,8 @@ class Booking extends Model
         'room_id',
         'check_in',
         'check_out',
+        'room_quantity',
+        'guest_count',
         'total_price',
         'status',
         'payment_status',
