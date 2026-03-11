@@ -18,7 +18,9 @@
             <div class="logo">Hotel Admin</div>
         </div>
         <div class="header-right">
-            <img src="{{ asset('images/admin-avatar.png') }}" class="avatar-small" alt="Admin">
+            <a href="{{ route('admin.profile') }}">
+                <img src="{{ asset('images/admin-avatar.png') }}" class="avatar-small" alt="Admin">
+            </a>
         </div>
     </header>
 
@@ -38,7 +40,7 @@
                             Dashboard
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('customers.index') || request()->routeIs('customers.create') ? 'active-menu active' : '' }}">
+                    <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                         <div class="menu-title">
                             <span>
                                 <i class="uil uil-users-alt"></i>
@@ -57,7 +59,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="menu-item {{ request()->routeIs('hotels.index') || request()->routeIs('hotels.create') ? 'active-menu active' : '' }}">
+                    <li class="menu-item {{ request()->routeIs('hotels.*') ? 'active' : '' }}">
                         <div class="menu-title">
                             <span>
                                 <i class="uil uil-bed-double"></i>

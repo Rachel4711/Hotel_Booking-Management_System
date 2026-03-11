@@ -38,3 +38,8 @@ Route::get('/bookings', function () {
 Route::get('/bookings/create', function () {
     return view('Admin.Booking.create');
 })->name('bookings.create');
+
+//Admin Profile
+Route::get('/admin/profile', function () {
+    return view('Admin.profile');
+})->name('admin.profile');

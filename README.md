@@ -1,4 +1,4 @@
-# 🏨 Hotel Management System
+# Hotel Management System
 
 ## Hello Fellow Teammates!
 
@@ -6,7 +6,7 @@ Follow the steps below to set up and run this project on your local machine.
 
 ---
 
-## ⚙️ Project Setup
+## Project Setup
 
 ### 1. Clone the Repository
 
@@ -62,7 +62,7 @@ php artisan migrate --seed
 
 ---
 
-## 🎨 Importing CSS or JavaScript
+## Importing CSS or JavaScript
 
 If you want to import any **CSS** or **JavaScript** file, use the following Vite format:
 
@@ -81,12 +81,8 @@ resources/views/Layouts/admin.blade.php
 
 ---
 
-## ✅ Notes
+## Notes
 
 * Ensure that `npm run dev` is running when developing the project.
 * If you encounter database issues, check your `.env` file to ensure the database configuration is correct.
 
-
----
-
-Happy coding! 🚀
