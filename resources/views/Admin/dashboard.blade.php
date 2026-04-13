@@ -8,6 +8,7 @@
 
 <h1>Admin Dashboard</h1>
 
+
 @if(session('success'))
     <div class="notice success">{{ session('success') }}</div>
 @endif
@@ -76,7 +77,12 @@
                 @endforelse
             </tbody>
         </table>
+
 </div>
+<form method="POST" action="{{ route('logout') }}" style="margin:10px 0 12px;">
+@csrf
+    <button type="submit" class="form-action" style="background:#7e6552; color:#fff; border:1px solid #7e6552;">Logout</button>
+</form>
 
 <div style="margin-top:14px;">
     {{ $users->links() }}

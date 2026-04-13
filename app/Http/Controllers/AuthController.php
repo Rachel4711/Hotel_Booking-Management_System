@@ -86,8 +86,14 @@ class AuthController extends Controller
         return redirect()->route('dashboard')->with('success', 'Welcome back, admin.');
     }
 
-    public function showRegister(): View
+    public function showRegister(Request $request): View
     {
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
         return view('auth.register');
     }
 

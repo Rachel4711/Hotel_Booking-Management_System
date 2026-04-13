@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | HotelFlow</title>
+    <title>Register | Hotel Book Management</title>
     <link rel="stylesheet" href="{{ asset('css/site.css') }}">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <div class="hero-grid">
             <section class="hero-panel" style="display:flex; flex-direction:column; justify-content:center;">
                 <div class="hero-kicker">Create your guest account</div>
-                <h1>Join HotelFlow and keep your bookings, profile, and support in one place.</h1>
+                <h1>Join us now and enjoy the best rates on quality hotel rooms.</h1>
                 <p>
                     Register once to unlock the guest dashboard, update your profile, and manage your hotel booking activity with ease.
                 </p>

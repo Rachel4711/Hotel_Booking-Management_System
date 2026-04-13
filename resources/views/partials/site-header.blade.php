@@ -8,7 +8,7 @@
 
     <div class="marketing-header-inner">
         <div class="marketing-brand-wrap">
-            <a href="{{ url('/') }}" class="marketing-brand">Hotel Management System</a>
+            <a href="{{ url('/') }}" class="marketing-brand">Hotel Booking Management</a>
         </div>
 
         <div class="marketing-nav-right">
