@@ -1,6 +1,3 @@
-@vite([
-        'resources/css/Admin/dashboard.css',
-    ])
 @extends('Layouts.admin')
 
 @section('content')
@@ -11,17 +8,17 @@
 
     <div class="card">
         <h3>Total Customers</h3>
-        <p>120</p>
+        <p>{{ $totalCustomers }}</p>
     </div>
 
     <div class="card">
         <h3>Total Hotels</h3>
-        <p>25</p>
+        <p>{{ $totalHotels }}</p>
     </div>
 
     <div class="card">
         <h3>Total Bookings</h3>
-        <p>340</p>
+        <p>{{ $totalBookings }}</p>
     </div>
 
 </div>

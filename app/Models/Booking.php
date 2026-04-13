@@ -25,7 +25,9 @@ class Booking extends Model
     protected static function booted()
     {
         static::creating(function ($booking) {
-            $booking->booking_code = 'BK' . strtoupper(uniqid());
+            if (empty($booking->booking_code)) {
+                $booking->booking_code = 'BK' . strtoupper(uniqid());
+            }
         });
     }
 

@@ -1,41 +1,45 @@
-<!-- This is example format, layout of user website-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- TODO: Replace with your actual title -->
-    <title>Your title</title>
-
-    <!-- TODO: Replace with your actual CSS and JS files -->
-    {{-- @vite([
-        'resources/css/Admin/admin.css',
-        'resources/js/Admin/admin.js'
-    ]) --}}
-
+    <title>User Panel</title>
+    <link rel="stylesheet" href="{{ asset('css/site.css') }}">
 </head>
 <body>
-    <!-- TODO: Replace with your actual header content -->
-    {{-- <header class="admin-header">
-        <div class="header-left">
-            <i class="uil uil-bars menu-toggle"></i>
-            <div class="logo">Hotel Admin</div>
+    @include('partials.site-header', ['showHome' => true])
+    <main class="container-wide auth-shell">
+        <div class="info-panel" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <div>
+                <h2 style="margin:0;">User Panel</h2>
+                <p style="margin:6px 0 0; color:var(--muted);">Manage your profile information and account security.</p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                @if (!request()->routeIs('user.profile.edit'))
+                    <a class="form-action secondary" href="{{ route('user.profile.edit') }}">My Profile</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="form-action primary">Logout</button>
+                </form>
+            </div>
         </div>
-        <div class="header-right">
-            <a href="{{ route('admin.profile') }}">
-                <img src="{{ asset('images/admin-avatar.png') }}" class="avatar-small" alt="Admin">
-            </a>
-        </div>
-    </header> --}}
 
-    <!-- Main Content -->
-    <main class="admin-content">
+        @if (session('success'))
+            <div class="notice success">{{ session('success') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="notice error">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         @yield('content')
     </main>
-
-    <!--TODO: Replace with your actual footer content -->
-    {{-- <footer></footer> --}}
 </body>
 </html>

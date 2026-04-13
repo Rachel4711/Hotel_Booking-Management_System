@@ -1,0 +1,281 @@
+/* ================
+GLOBAL LAYOUT
+=================== */
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f8;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+.admin-container{
+    display:flex;
+}
+
+.admin-content{
+    background:#f3f4f6;
+    flex:1;
+    padding:25px;
+    min-height:100vh;
+}
+
+/* ========
+HEADER
+=========== */
+.admin-header{
+    height:60px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 20px;
+    background:#fff;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    position:relative;
+    z-index:2;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-toggle{
+    font-size:24px;
+    cursor:pointer;
+    display:none;
+}
+
+.logo{
+    font-weight:bold;
+    font-size:18px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+}
+
+.avatar-small{
+    width:40px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+/* =======
+SIDEBAR
+========== */
+.admin-sidebar{
+    width:250px;
+    background:#1f2937;
+    color:#e5e7eb;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    transition:0.3s;
+}
+
+/* Sidebar top profile section */
+.sidebar-top{
+    text-align:center;
+    padding:20px;
+    padding-top:80px;
+}
+
+.avatar-large{
+    width:80px;
+    border-radius:50%;
+}
+
+.sidebar-top h3{
+    margin-top:10px;
+}
+
+/* ============
+SIDEBAR MENU
+=============== */
+.sidebar-menu ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.sidebar-menu li{
+    transition:0.2s;
+}
+
+/* Menu title layout */
+.menu-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+.menu-title span{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* Icon alignment */
+.sidebar-menu i{
+    font-size:18px;
+    width:20px;
+}
+
+/* Navigation links */
+.sidebar-menu a{
+    text-decoration:none;
+    color:#e5e7eb;
+    transition:0.2s;
+    display:block;
+    padding:12px 20px;
+}
+
+.sidebar-menu a:hover{
+    color:white;
+}
+
+/* Hover effect for menu items */
+.sidebar-menu > ul > li:hover{
+    background:#374151;
+}
+
+/* ==================
+ACTIVE MENU STATE
+===================== */
+.menu-item.active{
+    background:#273549;
+}
+
+/* Active main menu link */
+.sidebar-menu li.active-link > a{
+    background:#374151;
+    border-left:4px solid #60a5fa;
+    padding-left:16px;
+    font-weight:600;
+    transition:0.5s;
+}
+
+/* Divider between menu sections */
+.menu-item{
+    border-bottom:1.5px solid rgba(255,255,255,0.05);
+}
+
+/* ======================
+   SUBMENU (DROPDOWN)
+==========================*/
+.submenu{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.3s ease;
+    background:#273549;
+}
+
+/* Show submenu when menu is active */
+.menu-item.active .submenu{
+    max-height:300px;
+}
+
+/* Submenu links */
+.submenu li a{
+    padding:10px 40px;
+    font-size:14px;
+    color:#cfd8e3;
+}
+
+/* Hover effect */
+.submenu li:hover{
+    background:#374151;
+}
+
+/* Active submenu link */
+.submenu li.active-link a{
+    background:#374151;
+    border-left:4px solid #60a5fa;
+    padding-left:32px;
+    color:white;
+}
+
+/* =======================
+MENU ARROW ANIMATION
+========================== */
+.arrow{
+    transition:transform 0.3s ease;
+}
+
+.menu-item.active .arrow{
+    transform:rotate(-90deg);
+}
+
+/* =====================================================
+SIDEBAR FOOTER
+===================================================== */
+.sidebar-bottom{
+    margin-top:auto;
+    padding:20px;
+}
+
+.logout-btn{
+    width:100%;
+    padding:10px;
+    border:none;
+    background:#e74c3c;
+    color:white;
+    cursor:pointer;
+    border-radius:4px;
+}
+
+.logout-btn:hover{
+    background:#c0392b;
+}
+
+/* ==================
+RESPONSIVE - TABLET
+====================== */
+@media (max-width:768px){
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .admin-sidebar{
+        position:fixed;
+        left:-250px;
+        top:0;
+        height:100%;
+        z-index:1;
+    }
+
+    .admin-sidebar.active{
+        left:0;
+    }
+
+    .admin-content{
+        padding:20px;
+    }
+
+}
+
+/* ====================
+RESPONSIVE - MOBILE
+======================= */
+@media (max-width:480px){
+
+    .admin-content{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:16px;
+    }
+
+    .avatar-small{
+        width:35px;
+    }
+}
