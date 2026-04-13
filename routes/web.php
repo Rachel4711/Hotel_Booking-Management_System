@@ -14,12 +14,14 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('adminLogin');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 
 Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('adminLogin.submit');
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');

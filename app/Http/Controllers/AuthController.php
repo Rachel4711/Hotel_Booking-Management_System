@@ -14,7 +14,18 @@ class AuthController extends Controller
 {
     public function showLogin(): View
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'loginType' => 'user',
+            'submitRoute' => 'login.submit',
+        ]);
+    }
+
+    public function showAdminLogin(): View
+    {
+        return view('auth.login', [
+            'loginType' => 'admin',
+            'submitRoute' => 'adminLogin.submit',
+        ]);
     }
 
     public function login(Request $request): RedirectResponse
@@ -46,6 +57,33 @@ class AuthController extends Controller
         }
 
         return redirect()->route('user.profile.edit')->with('success', 'Welcome back.');
+    }
+
+    public function adminLogin(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+            return back()->withErrors([
+                'email' => 'Invalid admin email or password.',
+            ])->onlyInput('email');
+        }
+
+        if (! $user->isAdmin()) {
+            return back()->withErrors([
+                'email' => 'This account is not an admin account.',
+            ])->onlyInput('email');
+        }
+
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard')->with('success', 'Welcome back, admin.');
     }
 
     public function showRegister(): View

@@ -26,8 +26,8 @@
                 <div class="form-card panel" style="width:100%; max-width: 560px; margin: 0 auto;">
                     <div class="section-title" style="margin-top:0;">
                         <div>
-                            <h2>Login</h2>
-                            <p>Enter your credentials to continue.</p>
+                            <h2>{{ ($loginType ?? 'user') === 'admin' ? 'Admin Login' : 'Login' }}</h2>
+                            <p>{{ ($loginType ?? 'user') === 'admin' ? 'Enter your admin credentials to continue.' : 'Enter your credentials to continue.' }}</p>
                         </div>
                     </div>
 
@@ -35,7 +35,7 @@
                         <div class="notice success">{{ session('success') }}</div>
                     @endif
 
-                    <form method="POST" action="{{ route('login.submit') }}" class="form-grid" style="grid-template-columns:1fr;" autocomplete="off">
+                    <form method="POST" action="{{ route($submitRoute ?? 'login.submit') }}" class="form-grid" style="grid-template-columns:1fr;" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label class="form-label" for="email">Email</label>

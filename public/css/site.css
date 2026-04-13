@@ -111,6 +111,46 @@ body {
     font-weight: 700 !important;
 }
 
+.login-menu {
+    position: relative;
+}
+
+.login-menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: #fff;
+    border: 1px solid #d8c9bd;
+    border-radius: 12px;
+    min-width: 170px;
+    box-shadow: 0 12px 24px rgba(18, 32, 51, 0.12);
+    overflow: hidden;
+    z-index: 25;
+}
+
+.login-menu:hover .login-menu-dropdown,
+.login-menu:focus-within .login-menu-dropdown {
+    display: block;
+}
+
+.login-menu-dropdown a {
+    display: block;
+    padding: 11px 14px;
+    color: #7e6552;
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1px solid #efe6df;
+}
+
+.login-menu-dropdown a:last-child {
+    border-bottom: 0;
+}
+
+.login-menu-dropdown a:hover {
+    background: #f7f1ec;
+}
+
 a { color: inherit; }
 
 .container-wide {

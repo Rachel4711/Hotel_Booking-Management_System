@@ -13,8 +13,7 @@
 	</div>
 @endif
 
-<div class="panel" style="margin-top:12px; max-width:760px; background:#fff; border:1px solid #dbe3ea; border-radius:10px; padding:16px;">
-	<form method="POST" action="{{ route('customers.store') }}" style="display:grid; gap:12px;">
+<form method="POST" action="{{ route('customers.store') }}" style="display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; width:100%; max-width:760px;">
 		@csrf
 		<div>
 			<label>Name</label>
@@ -44,11 +43,10 @@
 			<input class="input" type="password" name="password_confirmation" required>
 		</div>
 
-		<div style="display:flex; gap:10px;">
+		<div style="display:flex; gap:10px; grid-column:1/-1;">
 			<button type="submit" class="form-action primary">Save</button>
 			<a class="form-action secondary" href="{{ route('customers.index') }}">Cancel</a>
 		</div>
 	</form>
-</div>
 
 @endsection

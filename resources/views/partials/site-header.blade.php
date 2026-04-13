@@ -1,7 +1,7 @@
 <header class="marketing-header">
     @php
         $isRegisterPage = request()->routeIs('register');
-        $isLoginPage = request()->routeIs('login');
+        $isLoginPage = request()->routeIs('login') || request()->routeIs('adminLogin');
         $loginActive = $isLoginPage || ! $isRegisterPage;
         $registerActive = $isRegisterPage;
     @endphp
@@ -15,7 +15,13 @@
             @if(($showHome ?? false) === true)
                 <a class="marketing-home" href="{{ url('/') }}">Homepage</a>
             @endif
-            <a class="{{ $loginActive ? 'marketing-login' : 'marketing-cta' }}" href="{{ route('login') }}">Login</a>
+            <div class="login-menu">
+                <button type="button" class="{{ $loginActive ? 'marketing-login' : 'marketing-cta' }}">Login</button>
+                <div class="login-menu-dropdown">
+                    <a href="{{ route('login') }}">User Login</a>
+                    <a href="{{ route('adminLogin') }}">Admin Login</a>
+                </div>
+            </div>
             <a class="{{ $registerActive ? 'marketing-login' : 'marketing-cta' }}" href="{{ route('register') }}">Register</a>
         </div>
     </div>
