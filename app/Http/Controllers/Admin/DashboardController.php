@@ -7,14 +7,19 @@ use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): Response
     {
-        $search = $request->string('search')->toString();
-        $role = strtolower(trim($request->string('role')->toString()));
+        $search = $request->has('search')
+            ? trim((string) $request->query('search', ''))
+            : trim((string) $request->cookie('admin_dashboard_search', ''));
+
+        $role = $request->has('role')
+            ? strtolower(trim((string) $request->query('role', '')))
+            : strtolower(trim((string) $request->cookie('admin_dashboard_role', '')));
         $role = in_array($role, ['user', 'admin'], true) ? $role : '';
 
         $users = User::query()
@@ -32,13 +37,15 @@ class DashboardController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('Admin.dashboard', [
+        return response()->view('Admin.dashboard', [
             'totalCustomers' => User::where('role', 'user')->count(),
             'totalHotels' => Hotel::count(),
             'totalBookings' => Booking::count(),
             'users' => $users,
             'search' => $search,
             'role' => $role,
-        ]);
+        ])
+            ->cookie('admin_dashboard_search', $search, 43200)
+            ->cookie('admin_dashboard_role', $role, 43200);
     }
 }

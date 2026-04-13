@@ -6,18 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', User::class);
 
-        $search = $request->string('search')->toString();
-        $role = $request->string('role')->toString();
+        $search = $request->has('search')
+            ? trim((string) $request->query('search', ''))
+            : trim((string) $request->cookie('admin_customers_search', ''));
+
+        $role = $request->has('role')
+            ? strtolower(trim((string) $request->query('role', '')))
+            : strtolower(trim((string) $request->cookie('admin_customers_role', '')));
+        $role = in_array($role, ['user', 'admin'], true) ? $role : '';
 
         $users = User::query()
             ->when($role !== '', function ($query) use ($role) {
@@ -34,7 +41,9 @@ class UserController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('Admin.Customer.index', compact('users', 'search', 'role'));
+        return response()->view('Admin.Customer.index', compact('users', 'search', 'role'))
+            ->cookie('admin_customers_search', $search, 43200)
+            ->cookie('admin_customers_role', $role, 43200);
     }
 
     public function create(): View

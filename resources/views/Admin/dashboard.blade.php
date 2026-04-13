@@ -8,7 +8,6 @@
 
 <h1>Admin Dashboard</h1>
 
-
 @if(session('success'))
     <div class="notice success">{{ session('success') }}</div>
 @endif

@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var setSidebarOpen = state[1];
         var csrfMeta = document.querySelector('meta[name="csrf-token"]');
         var csrf = csrfMeta ? csrfMeta.getAttribute('content') : '';
-        var csrfMeta = document.querySelector('meta[name="csrf-token"]');
-        var csrf = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
         return e('div', null,
             e('header', { className: 'admin-header' },
@@ -35,10 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         onClick: function () { setSidebarOpen(!sidebarOpen); }
                     }),
                     e('div', { className: 'logo' }, 'Hotel Admin')
-                        e('form', { method: 'POST', action: data.logoutUrl },
-                            e('input', { type: 'hidden', name: '_token', value: csrf }),
-                            e('button', { className: 'logout-btn', type: 'submit' }, 'Logout')
-                        )
+                ),
                 e('div', { className: 'header-right' },
                     e('a', { href: data.profileUrl },
                         e('img', {

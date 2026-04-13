@@ -46,9 +46,7 @@ class ProfileController extends Controller
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
-
         $user->save();
-
         return redirect()->route('user.profile.edit')->with('success', 'Profile updated successfully.');
     }
 }
