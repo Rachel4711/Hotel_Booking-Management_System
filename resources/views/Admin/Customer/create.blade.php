@@ -3,7 +3,7 @@
 
 <h1>Add Customer</h1>
 
-@if($errors->any())
+{{-- @if($errors->any())
 	<div class="notice error">
 		<ul>
 			@foreach($errors->all() as $error)
@@ -11,7 +11,7 @@
 			@endforeach
 		</ul>
 	</div>
-@endif
+@endif --}}
 
 <form method="POST" action="{{ route('customers.store') }}" style="display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; width:100%; max-width:760px;">
 		@csrf

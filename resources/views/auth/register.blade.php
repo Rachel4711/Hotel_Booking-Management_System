@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Hotel Book Management</title>
-    <link rel="stylesheet" href="{{ asset('css/site.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body>
     @include('partials.site-header', ['showHome' => true])

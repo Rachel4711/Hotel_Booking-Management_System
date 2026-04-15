@@ -7,9 +7,9 @@
 
 <h1>Customer List</h1>
 
-@if(session('success'))
+{{-- @if(session('success'))
 	<div class="notice success">{{ session('success') }}</div>
-@endif
+@endif --}}
 
 <div class="panel" style="margin-top:12px; background:#fff; border:1px solid #dbe3ea; border-radius:10px; padding:16px;">
 	<form id="customers-filter-form" method="GET" action="{{ route('customers.index') }}" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
@@ -44,14 +44,18 @@
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->email }}</td>
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->phone ?? '-' }}</td>
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->role }}</td>
-						<td style="padding:10px; border-bottom:1px solid #f1f4f7; display:flex; gap:8px;">
-							<a class="form-action secondary" href="{{ route('customers.show', $user) }}">View</a>
-							<a class="form-action secondary" href="{{ route('customers.edit', $user) }}">Edit</a>
-							<form method="POST" action="{{ route('customers.destroy', $user) }}" onsubmit="return confirm('Delete this user?');">
-								@csrf
-								@method('DELETE')
-								<button type="submit" class="form-action" style="background:#c0392b; color:#fff; border:1px solid #c0392b;">Delete</button>
-							</form>
+						<td>
+							<div style="display:flex; gap:8px;">
+								<a class="form-action btn-view" style="padding: 6px 12px; font-size:12px;" href="{{ route('customers.show', $user) }}">View</a>
+								
+								<a class="form-action btn-edit" style="padding: 6px 12px; font-size:12px;" href="{{ route('customers.edit', $user) }}">Edit</a>
+								
+								<form method="POST" action="{{ route('customers.destroy', $user) }}" onsubmit="return confirm('Are you sure you want to delete this user?');" style="margin:0;">
+									@csrf
+									@method('DELETE')
+									<button type="submit" class="form-action btn-delete" style="padding: 6px 12px; font-size:12px;">Delete</button>
+								</form>
+							</div>
 						</td>
 					</tr>
 				@empty

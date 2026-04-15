@@ -3,9 +3,6 @@
 
 <h1>Admin Profile</h1>
 
-@if(session('success'))
-	<div class="notice success">{{ session('success') }}</div>
-@endif
 
 <div class="panel" style="margin-top:12px; max-width:720px; background:#fff; border:1px solid #dbe3ea; border-radius:10px; padding:18px;">
 	<form method="POST" action="{{ route('admin.profile.update') }}" enctype="multipart/form-data">
