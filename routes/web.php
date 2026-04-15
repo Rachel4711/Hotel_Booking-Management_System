@@ -29,9 +29,30 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+// User Auth
 Route::middleware('auth')->group(function () {
+
+    Route::get('/home', function () {
+        return view('User.home');
+    })->name('home');
+
     Route::get('/user/profile', [UserProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
+
+    // Booking Page
+    Route::get('/hotel/{id}/book', function ($id) {
+        return view('User.booking', compact('id'));
+    })->name('user.booking.create');
+
+    // Payment Page
+    Route::get('/booking/{booking_id}/payment', function ($booking_id) {
+        return view('User.payment', compact('booking_id'));
+    })->name('user.payment');
+
+    // History Page
+    Route::get('/user/history', function () {
+        return view('User.history');
+    })->name('user.history');
 });
 
 Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () {

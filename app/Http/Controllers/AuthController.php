@@ -56,7 +56,7 @@ class AuthController extends Controller
             return redirect()->route('dashboard')->with('success', 'Welcome back, admin.');
         }
 
-        return redirect()->route('user.profile.edit')->with('success', 'Welcome back.');
+        return redirect()->route('home')->with('success', 'Welcome back.');
     }
 
     public function adminLogin(Request $request): RedirectResponse
@@ -158,7 +158,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('user.profile.edit')->with('success', 'Account created successfully.');
+        return redirect()->route('home')->with('success', 'Account created successfully.');
     }
 
     public function logout(Request $request): RedirectResponse
