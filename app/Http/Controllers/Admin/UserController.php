@@ -26,6 +26,11 @@ class UserController extends Controller
             : strtolower(trim((string) $request->cookie('admin_customers_role', '')));
         $role = in_array($role, ['user', 'admin'], true) ? $role : '';
 
+        $sort = $request->has('sort')
+            ? strtolower(trim((string) $request->query('sort', 'id_asc')))
+            : strtolower(trim((string) $request->cookie('admin_customers_sort', 'id_asc')));
+        $sort = in_array($sort, ['id_asc', 'name_asc', 'name_desc'], true) ? $sort : 'id_asc';
+
         $users = User::query()
             ->when($role !== '', function ($query) use ($role) {
                 $query->where('role', $role);
@@ -37,13 +42,22 @@ class UserController extends Controller
                         ->orWhere('phone', 'like', "%{$search}%");
                 });
             })
-            ->latest()
+            ->when($sort === 'id_asc', function ($query) {
+                $query->orderBy('id', 'asc');
+            })
+            ->when($sort === 'name_asc', function ($query) {
+                $query->orderBy('name', 'asc')->orderBy('id', 'asc');
+            })
+            ->when($sort === 'name_desc', function ($query) {
+                $query->orderBy('name', 'desc')->orderBy('id', 'asc');
+            })
             ->paginate(10)
             ->withQueryString();
 
-        return response()->view('Admin.Customer.index', compact('users', 'search', 'role'))
+        return response()->view('Admin.Customer.index', compact('users', 'search', 'role', 'sort'))
             ->cookie('admin_customers_search', $search, 43200)
-            ->cookie('admin_customers_role', $role, 43200);
+            ->cookie('admin_customers_role', $role, 43200)
+            ->cookie('admin_customers_sort', $sort, 43200);
     }
 
     public function create(): View

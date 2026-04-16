@@ -13,6 +13,28 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 </head>
 <body>
+    @php
+        $currentAdmin = auth()->user();
+        $adminName = $currentAdmin?->name ?: 'Admin';
+        $nameParts = preg_split('/\s+/', trim($adminName)) ?: [];
+        $initials = '';
+        foreach ($nameParts as $part) {
+            if ($part === '') {
+                continue;
+            }
+            $initials .= strtoupper(substr($part, 0, 1));
+            if (strlen($initials) >= 2) {
+                break;
+            }
+        }
+        $initials = $initials !== '' ? $initials : 'A';
+
+        $avatarSvg = "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><rect width='160' height='160' fill='#334155'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-size='56' font-weight='700' fill='#ffffff'>{$initials}</text></svg>";
+        $adminAvatar = ($currentAdmin && $currentAdmin->photo)
+            ? \Illuminate\Support\Facades\Storage::url($currentAdmin->photo)
+            : 'data:image/svg+xml;utf8,' . rawurlencode($avatarSvg);
+    @endphp
+
     {{-- @include('partials.site-header', ['showHome' => true]) --}}
 
     <header class="admin-header">
@@ -21,17 +43,23 @@
             <div class="logo">Hotel Admin</div>
         </div>
         <div class="header-right">
-            <a href="{{ route('admin.profile') }}">
-                <img src="{{ asset('images/admin-avatar.png') }}" class="avatar-small" alt="Admin">
+            <a href="{{ route('admin.profile') }}" class="header-profile-link">
+                <img src="{{ $adminAvatar }}" class="avatar-small" alt="{{ $adminName }}">
+                <span>{{ $adminName }}</span>
             </a>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                @csrf
+                <button type="submit" class="header-logout-btn">Logout</button>
+            </form>
         </div>
     </header>
 
     <div class="admin-container">
         <aside class="admin-sidebar" id="sidebar">
             <div class="sidebar-top">
-                <img src="{{ asset('images/admin-avatar.png') }}" class="avatar-large" alt="Admin">
-                <h3>Admin Test</h3>
+                <img src="{{ $adminAvatar }}" class="avatar-large" alt="{{ $adminName }}">
+                <h3>{{ $adminName }}</h3>
+                <a href="{{ route('admin.profile') }}" class="sidebar-profile-btn">View Profile</a>
             </div>
             <nav class="sidebar-menu">
                 <ul>
@@ -95,15 +123,6 @@
                 </ul>
             </nav>
 
-            <div class="sidebar-bottom">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="uil uil-sign-out-alt"></i>
-                        Logout
-                    </button>
-                </form>
-            </div>
         </aside>
 
         <main class="admin-content">

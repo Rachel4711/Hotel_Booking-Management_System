@@ -3,6 +3,16 @@
 
 @php
 	$isFiltered = ($search ?? '') !== '' || ($role ?? '') !== '';
+	$currentSort = $sort ?? 'id_asc';
+	$nextNameSort = $currentSort === 'name_asc' ? 'name_desc' : 'name_asc';
+	$nameSortText = $currentSort === 'name_asc' ? 'A-Z ▲' : ($currentSort === 'name_desc' ? 'Z-A ▼' : 'A-Z ▲');
+	$baseQuery = [
+		'search' => $search,
+		'role' => $role,
+	];
+	$noSortQuery = array_filter(array_merge($baseQuery, ['sort' => 'id_asc']), fn ($value) => $value !== null && $value !== '');
+	$nameSortQuery = array_filter(array_merge($baseQuery, ['sort' => $nextNameSort]), fn ($value) => $value !== null && $value !== '');
+	$startNo = ($users->currentPage() - 1) * $users->perPage();
 @endphp
 
 <h1>Customer List</h1>
@@ -19,6 +29,7 @@
 			<option value="user" {{ $role === 'user' ? 'selected' : '' }}>User</option>
 			<option value="admin" {{ $role === 'admin' ? 'selected' : '' }}>Admin</option>
 		</select>
+		<input id="customers-sort" type="hidden" name="sort" value="{{ $currentSort }}">
 		<button id="btn-customers-filter" type="submit" class="form-action {{ $isFiltered ? 'primary' : 'secondary' }}">Filter</button>
 		<button id="btn-customers-reset" type="button" class="form-action {{ $isFiltered ? 'secondary' : 'primary' }}">Reset</button>
 		<a id="btn-customers-add" class="form-action secondary" href="{{ route('customers.create') }}">Add Customer</a>
@@ -28,8 +39,12 @@
 		<table style="width:100%; border-collapse:collapse;">
 			<thead>
 				<tr>
-					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">ID</th>
-					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">Name</th>
+					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">
+						<a href="{{ route('customers.index', $noSortQuery) }}" style="color:inherit; text-decoration:none; font-weight:700;">No ▲</a>
+					</th>
+					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">
+						<a href="{{ route('customers.index', $nameSortQuery) }}" style="color:inherit; text-decoration:none; font-weight:700;">Name {{ $nameSortText }}</a>
+					</th>
 					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">Email</th>
 					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">Phone</th>
 					<th style="text-align:left; padding:10px; border-bottom:1px solid #e6edf2;">Role</th>
@@ -39,7 +54,7 @@
 			<tbody>
 				@forelse($users as $user)
 					<tr>
-						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->id }}</td>
+						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $startNo + $loop->iteration }}</td>
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->name }}</td>
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->email }}</td>
 						<td style="padding:10px; border-bottom:1px solid #f1f4f7;">{{ $user->phone ?? '-' }}</td>
@@ -77,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	var form = document.getElementById('customers-filter-form');
 	var searchInput = document.getElementById('customers-search');
 	var roleSelect = document.getElementById('customers-role');
+	var sortInput = document.getElementById('customers-sort');
 	var filterBtn = document.getElementById('btn-customers-filter');
 	var resetBtn = document.getElementById('btn-customers-reset');
 	var addBtn = document.getElementById('btn-customers-add');
@@ -103,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		resetBtn.addEventListener('click', function () {
 			if (searchInput) searchInput.value = '';
 			if (roleSelect) roleSelect.value = '';
+			if (sortInput) sortInput.value = 'id_asc';
 			activate(resetBtn);
 			form.submit();
 		});
