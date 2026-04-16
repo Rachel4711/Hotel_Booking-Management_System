@@ -29,6 +29,15 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+// Serve user photos
+Route::get('/photo/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (file_exists($filePath)) {
+        return response()->file($filePath);
+    }
+    abort(404);
+})->where('path', '.+')->name('photo.show');
+
 // User Auth
 Route::middleware('auth')->group(function () {
 

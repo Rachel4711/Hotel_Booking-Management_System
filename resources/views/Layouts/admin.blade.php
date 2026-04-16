@@ -30,9 +30,11 @@
         $initials = $initials !== '' ? $initials : 'A';
 
         $avatarSvg = "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><rect width='160' height='160' fill='#334155'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, Helvetica, sans-serif' font-size='56' font-weight='700' fill='#ffffff'>{$initials}</text></svg>";
-        $adminAvatar = ($currentAdmin && $currentAdmin->photo)
-            ? \Illuminate\Support\Facades\Storage::url($currentAdmin->photo)
-            : 'data:image/svg+xml;utf8,' . rawurlencode($avatarSvg);
+        
+        $adminAvatar = 'data:image/svg+xml;utf8,' . rawurlencode($avatarSvg);
+        if ($currentAdmin && $currentAdmin->photo) {
+            $adminAvatar = route('photo.show', $currentAdmin->photo);
+        }
     @endphp
 
     {{-- @include('partials.site-header', ['showHome' => true]) --}}
