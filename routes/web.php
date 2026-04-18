@@ -2,6 +2,7 @@
 
 use App\Models\Hotel;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HotelController as AdminHotelController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
@@ -142,12 +143,10 @@ Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () 
     Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile');
     Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
 
-    Route::get('/hotels', function () {
-        return view('Admin.Hotel.index');
-    })->name('hotels.index');
-    Route::get('/hotels/create', function () {
-        return view('Admin.Hotel.create');
-    })->name('hotels.create');
+    Route::resource('/admin/hotels', AdminHotelController::class)
+        ->parameters(['hotels' => 'hotel'])
+        ->names('hotels');
+
     Route::get('/bookings', function () {
         return view('Admin.Booking.index');
     })->name('bookings.index');
