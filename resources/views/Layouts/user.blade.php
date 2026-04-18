@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Hotel Booking Management')</title>
     <link rel="stylesheet" href="{{ asset('css/user-theme.css') }}">
+    @stack('styles')
 </head>
 <body>
     <header class="marketing-header">
@@ -63,5 +64,7 @@
             <p style="margin: 0; font-weight: 600;">&copy; {{ date('Y') }} LuxeHotel Management. All rights reserved.</p>
         </div>
     </footer>
+
+    @stack('scripts')
 </body>
 </html>

@@ -1,11 +1,13 @@
 <?php
 
+use App\Models\Hotel;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Website home
@@ -41,8 +43,67 @@ Route::get('/photo/{path}', function ($path) {
 // User Auth
 Route::middleware('auth')->group(function () {
 
-    Route::get('/home', function () {
-        return view('User.home');
+    Route::get('/home', function (Request $request) {
+        $selectedState = $request->query('state', 'All');
+        $searchTerm = trim((string) $request->query('search', ''));
+        $isKeywordSearch = $searchTerm !== '';
+        $effectiveSelectedState = $isKeywordSearch ? 'All' : $selectedState;
+
+        $hotelStates = Hotel::query()
+            ->select('state')
+            ->whereNotNull('state')
+            ->where('state', '!=', '')
+            ->distinct()
+            ->orderBy('state')
+            ->pluck('state')
+            ->values();
+
+        $hotelsQuery = Hotel::query();
+
+        if ($effectiveSelectedState !== 'All') {
+            $hotelsQuery->where('state', $effectiveSelectedState);
+        }
+
+        if ($searchTerm !== '') {
+            $normalizedSearchTerm = mb_strtolower($searchTerm);
+
+            $hotelsQuery->where(function ($query) use ($normalizedSearchTerm) {
+                $query->whereRaw('LOWER(name) LIKE ?', ['%' . $normalizedSearchTerm . '%'])
+                    ->orWhereRaw('LOWER(state) LIKE ?', ['%' . $normalizedSearchTerm . '%']);
+            });
+        }
+
+        $filteredHotels = $hotelsQuery
+            ->orderByDesc('click_count')
+            ->orderBy('name')
+            ->get();
+
+        $clickedHotels = Hotel::query()
+            ->where('click_count', '>', 0)
+            ->orderByDesc('click_count')
+            ->orderBy('name')
+            ->get();
+
+        $hotPickedHotels = Hotel::query()
+            ->where('click_count', 0)
+            ->orderBy('name')
+            ->get();
+
+        if ($clickedHotels->count() >= 3) {
+            $recommendations = $clickedHotels->take(3);
+        } elseif ($clickedHotels->isNotEmpty()) {
+            $recommendations = $clickedHotels->concat($hotPickedHotels)->take(3);
+        } else {
+            $recommendations = $hotPickedHotels->take(3);
+        }
+
+        return view('User.home', [
+            'selectedState' => $effectiveSelectedState,
+            'searchTerm' => $searchTerm,
+            'hotelStates' => $hotelStates,
+            'filteredHotels' => $filteredHotels,
+            'recommendations' => $recommendations,
+        ]);
     })->name('home');
 
     Route::get('/user/profile', [UserProfileController::class, 'edit'])->name('user.profile.edit');
@@ -50,7 +111,10 @@ Route::middleware('auth')->group(function () {
 
     // Booking Page
     Route::get('/hotel/{id}/book', function ($id) {
-        return view('User.booking', compact('id'));
+        $hotel = Hotel::findOrFail($id);
+        $hotel->increment('click_count');
+
+        return view('User.booking', compact('id', 'hotel'));
     })->name('user.booking.create');
 
     // Payment Page

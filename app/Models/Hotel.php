@@ -12,15 +12,15 @@ class Hotel extends Model
         'description',
         'address',
         'state',
-        'category',
-        'image',
         'policies',
         'cover_image',
-        'images'
+        'images',
+        'click_count'
     ];
 
     protected $casts = [
         'images' => 'array',
+        'click_count' => 'integer',
     ];
 
     public function rooms()
