@@ -14,8 +14,7 @@ class Hotel extends Model
         'state',
         'policies',
         'cover_image',
-        'images',
-        'click_count'
+        'images'
     ];
 
     protected $casts = [
