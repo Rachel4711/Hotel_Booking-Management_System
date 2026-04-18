@@ -52,9 +52,7 @@
 						<th>Hotel Name</th>
 						<th>Address</th>
 						<th>State</th>
-						<th>View</th>
-						<th>Edit</th>
-						<th>Delete</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -66,34 +64,45 @@
 							<td>{{ $hotel->address }}</td>
 							<td><span class="badge">{{ $hotel->state }}</span></td>
 							<td>
-								<a href="{{ route('hotels.show', $hotel) }}" class="hotel-icon-link" aria-label="View {{ $hotel->name }}">
-									<i class="uil uil-eye"></i>
-								</a>
-							</td>
-							<td>
-								<a href="{{ route('hotels.edit', $hotel) }}" class="hotel-icon-link edit" aria-label="Edit {{ $hotel->name }}">
-									<i class="uil uil-edit"></i>
-								</a>
-							</td>
-							<td>
-								<button
-									type="button"
-									class="hotel-icon-link delete js-delete-btn"
-									data-form-id="delete-hotel-{{ $hotel->id }}"
-									data-hotel-name="{{ $hotel->name }}"
-									aria-label="Delete {{ $hotel->name }}"
-								>
-									<i class="uil uil-trash-alt"></i>
-								</button>
-								<form id="delete-hotel-{{ $hotel->id }}" method="POST" action="{{ route('hotels.destroy', $hotel) }}" style="display:none;">
-									@csrf
-									@method('DELETE')
-								</form>
+								<div style="display:flex; gap:8px;">
+									<a
+										href="{{ route('hotels.show', $hotel) }}"
+										class="form-action btn-view"
+										style="padding:6px 12px; font-size:12px;"
+										aria-label="View {{ $hotel->name }}"
+									>
+										View
+									</a>
+
+									<a
+										href="{{ route('hotels.edit', $hotel) }}"
+										class="form-action btn-edit"
+										style="padding:6px 12px; font-size:12px;"
+										aria-label="Edit {{ $hotel->name }}"
+									>
+										Edit
+									</a>
+
+									<button
+										type="button"
+										class="form-action btn-delete js-delete-btn"
+										style="padding:6px 12px; font-size:12px;"
+										data-form-id="delete-hotel-{{ $hotel->id }}"
+										data-hotel-name="{{ $hotel->name }}"
+										aria-label="Delete {{ $hotel->name }}"
+									>
+										Delete
+									</button>
+									<form id="delete-hotel-{{ $hotel->id }}" method="POST" action="{{ route('hotels.destroy', $hotel) }}" style="display:none;">
+										@csrf
+										@method('DELETE')
+									</form>
+								</div>
 							</td>
 						</tr>
 					@empty
 						<tr>
-							<td colspan="7">No hotels found.</td>
+							<td colspan="5">No hotels found.</td>
 						</tr>
 					@endforelse
 				</tbody>
