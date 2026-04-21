@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HotelController as AdminHotelController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
@@ -110,18 +111,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [UserProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('/user/profile', [UserProfileController::class, 'update'])->name('user.profile.update');
 
-    // Booking Page
-    Route::get('/hotel/{id}/book', function ($id) {
-        $hotel = Hotel::findOrFail($id);
-        $hotel->increment('click_count');
+    // Booking Routes
+    Route::get('/hotel/{id}', [BookingController::class, 'create'])->name('user.booking.create');
+    Route::post('/booking', [BookingController::class, 'store'])->name('user.booking.store');
+    Route::put('/booking/{bookingId}/confirm', [BookingController::class, 'confirm'])->name('user.booking.confirm');
+    Route::post('/booking/check-availability', [BookingController::class, 'checkAvailability'])->name('user.booking.check-availability');
+    Route::post('/booking/calculate-price', [BookingController::class, 'calculatePrice'])->name('user.booking.calculate-price');
 
-        return view('User.booking', compact('id', 'hotel'));
-    })->name('user.booking.create');
-
-    // Payment Page
-    Route::get('/booking/{booking_id}/payment', function ($booking_id) {
-        return view('User.payment', compact('booking_id'));
-    })->name('user.payment');
+    // Payment Routes
+    Route::get('/booking/{booking_id}/payment', [BookingController::class, 'showPayment'])->name('user.payment');
+    Route::post('/booking/{booking_id}/payment', [BookingController::class, 'processPayment'])->name('user.payment.process');
 
     // History Page
     Route::get('/user/history', function () {
