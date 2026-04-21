@@ -14,6 +14,7 @@ class Room extends Model
         'capacity',
         'price',
         'total_rooms',
+        'image',
     ];
 
     public function hotel()

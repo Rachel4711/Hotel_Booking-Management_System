@@ -20,17 +20,7 @@ class Booking extends Model
         'payment_status',
         'payment_method',
     ];
-
-    // auto generate booking code
-    protected static function booted()
-    {
-        static::creating(function ($booking) {
-            if (empty($booking->booking_code)) {
-                $booking->booking_code = 'BK' . strtoupper(uniqid());
-            }
-        });
-    }
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('capacity');
             $table->decimal('price', 10, 2);
             $table->integer('total_rooms')->default(1);
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
