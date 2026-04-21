@@ -2,6 +2,8 @@
 
 use App\Models\Hotel;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HotelController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\HotelController as AdminHotelController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -146,6 +148,17 @@ Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () 
         ->parameters(['hotels' => 'hotel'])
         ->names('hotels');
 
+    // Room CRUD - Nested under Hotel for Index & Create
+    Route::get('hotels/{hotel}/rooms', [RoomController::class, 'index'])->name('hotel.rooms.index');
+    Route::get('hotels/{hotel}/rooms/create', [RoomController::class, 'create'])->name('hotel.rooms.create');
+    
+    // Room CRUD - Direct actions
+    Route::post('rooms', [RoomController::class, 'store'])->name('rooms.store');
+    Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+    Route::get('rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+
     Route::get('/bookings', function () {
         return view('Admin.Booking.index');
     })->name('bookings.index');
@@ -153,3 +166,4 @@ Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () 
         return view('Admin.Booking.create');
     })->name('bookings.create');
 });
+

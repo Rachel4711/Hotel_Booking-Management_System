@@ -99,6 +99,9 @@
 									>
 										Delete
 									</button>
+									<a href="{{ route('hotel.rooms.index', $hotel->id) }}" class="form-action secondary" style="padding:6px 12px; font-size:12px;">
+										Manage Rooms
+									</a>
 									<form id="delete-hotel-{{ $hotel->id }}" method="POST" action="{{ route('hotels.destroy', $hotel) }}" style="display:none;">
 										@csrf
 										@method('DELETE')
