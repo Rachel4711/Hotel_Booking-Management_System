@@ -1,6 +1,12 @@
 @extends('Layouts.admin')
 @section('content')
 
+<style>
+.w-5 {
+	display: none;
+}
+</style>
+
 @php
 	$stateOptions = collect(['All'])->merge($states ?? collect());
 	$startNo = ($hotels->currentPage() - 1) * $hotels->perPage();
@@ -114,6 +120,28 @@
 				Showing {{ $hotels->firstItem() ?? 0 }} to {{ $hotels->lastItem() ?? 0 }} of {{ $hotels->total() }} results
 			</p>
 		</div>
+
+		@if ($hotels->hasPages())
+			<div style="margin-top:14px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+				<p style="margin:0; color:#64748b; font-size:14px;">
+					Page {{ $hotels->currentPage() }} of {{ $hotels->lastPage() }}
+				</p>
+
+				<div style="display:flex; gap:8px;">
+					@if ($hotels->onFirstPage())
+						<span class="form-action secondary" style="padding:6px 12px; font-size:12px; opacity:.55; cursor:not-allowed;">Previous</span>
+					@else
+						<a href="{{ $hotels->previousPageUrl() }}" class="form-action secondary" style="padding:6px 12px; font-size:12px;">Previous</a>
+					@endif
+
+					@if ($hotels->hasMorePages())
+						<a href="{{ $hotels->nextPageUrl() }}" class="form-action primary" style="padding:6px 12px; font-size:12px;">Next</a>
+					@else
+						<span class="form-action primary" style="padding:6px 12px; font-size:12px; opacity:.55; cursor:not-allowed;">Next</span>
+					@endif
+				</div>
+			</div>
+		@endif
 	</section>
 </div>
 

@@ -78,7 +78,6 @@ class HotelController extends Controller
 			'state' => $validated['state'],
 			'cover_image' => $coverImage,
 			'images' => $images,
-			'click_count' => 0,
 		]);
 
 		return redirect()
