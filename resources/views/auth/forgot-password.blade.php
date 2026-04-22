@@ -11,9 +11,9 @@
     <main class="container-wide" style="padding: 42px 0; max-width: 720px;">
         <section class="hero-panel">
             <div class="hero-kicker">Password recovery</div>
-            <h1>Request a reset link with a simple, clean recovery flow.</h1>
+            <h1>Verify your email before resetting your password.</h1>
             <p>
-                We will send the reset link to your email so you can get back into your account quickly.
+                Enter an email that already exists in our system, then continue to create a new password.
             </p>
         </section>
 
@@ -39,7 +39,7 @@
                     <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" required>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="form-action primary">Send reset link</button>
+                    <button type="submit" class="form-action primary">Verify email</button>
                     <a class="form-action secondary" href="{{ route('login') }}">Back to login</a>
                 </div>
             </form>

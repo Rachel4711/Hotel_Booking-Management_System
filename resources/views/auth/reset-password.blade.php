@@ -12,7 +12,7 @@
         <section class="hero-panel">
             <div class="hero-kicker">Reset password</div>
             <h1>Create a new password and continue securely.</h1>
-            <p>Choose a strong password and confirm it below.</p>
+            <p>Choose a strong password and confirm it below. Your email is already verified.</p>
         </section>
 
         <section class="info-panel" style="margin-top: 20px;">
@@ -28,11 +28,9 @@
 
             <form method="POST" action="{{ route('password.update') }}" class="form-grid" style="grid-template-columns:1fr;">
                 @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
-
                 <div class="form-group">
                     <label class="form-label" for="email">Email</label>
-                    <input class="input" id="email" type="email" name="email" value="{{ old('email', $email) }}" required>
+                    <input class="input" id="email" type="email" name="email" value="{{ old('email', $email) }}" readonly required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">New Password</label>

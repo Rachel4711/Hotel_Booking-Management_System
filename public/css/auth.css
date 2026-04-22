@@ -193,6 +193,15 @@ a { color: inherit; }
     transform: translateY(-1px);
 }
 
+.btn-outline:hover,
+.btn-soft:hover,
+.form-action.primary:hover,
+.form-action.secondary:hover,
+.btn:hover {
+    background: #6a5444;
+    color: #fff;
+}
+
 .btn {
     background: var(--brand);
     color: #fff;
@@ -206,8 +215,8 @@ a { color: inherit; }
 }
 
 .btn-soft {
-    background: #7e6552;
-    color: #fff;
+    background: #fff;
+    color: #7e6552;
     border-color: #7e6552;
 }
 
