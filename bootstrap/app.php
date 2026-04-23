@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('dashboard');
             }
 
-            return route('user.profile.edit');
+            return route('home');
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
