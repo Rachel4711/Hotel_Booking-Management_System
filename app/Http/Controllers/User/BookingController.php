@@ -22,10 +22,8 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'hotel_id' => 'required|exists:hotels,id',
-            'selected_rooms' => 'required|array|min:1', 
-            'selected_rooms.*' => 'exists:rooms,id',
-            'room_quantities' => 'required|array',
-            'room_quantities.*' => 'required|integer|min:1',
+            'room_id' => 'required|exists:rooms,id',
+            'room_quantity' => 'required|integer|min:1',
             'check_in' => 'required|date|after_or_equal:today',
             'check_out' => 'required|date|after:check_in',
             'guest_count' => 'required|integer|min:1',
@@ -39,49 +37,44 @@ class BookingController extends Controller
             return back()->with('error', 'Check-out date must be after check-in date.');
         }
         
-        // Verify all selected rooms belong to the requested hotel
-        $hotelRoomIds = Room::where('hotel_id', $validated['hotel_id'])->pluck('id')->toArray();
-        foreach ($validated['selected_rooms'] as $roomId) {
-            if (!in_array($roomId, $hotelRoomIds)) {
-                return back()->with('error', 'One or more selected rooms do not belong to this hotel.');
-            }
+        $room = Room::where('hotel_id', $validated['hotel_id'])
+                    ->where('id', $validated['room_id'])
+                    ->first();
+
+        if (!$room) {
+            return back()->with('error', 'The selected room does not belong to this hotel.');
         }
-        
+
+        $quantity = $validated['room_quantity'];
+
+        $maxCapacity = $room->capacity * $quantity;
+        if ($validated['guest_count'] > $maxCapacity) {
+            return back()->with('error', "The selected room(s) can only accommodate up to {$maxCapacity} guests. Please increase room quantity or change room type.");
+        }
+
+        if (!$room->isAvailable($validated['check_in'], $validated['check_out'], $quantity)) {
+            return back()->with('error', "Sorry, {$room->name} does not have enough available rooms for the chosen dates.");
+        }
+
+        $subtotal = $room->price * $quantity * $nights;
+        $tax = $subtotal * 0.06;
+        $totalPrice = $subtotal + $tax;
+
         $bookingCode = 'BKG-' . strtoupper(Str::random(8));
-        $firstBookingId = null;
 
-        foreach ($validated['selected_rooms'] as $roomId) {
-            $room = Room::findOrFail($roomId);
-            $quantity = $validated['room_quantities'][$roomId] ?? 1;
-            
-            if ($quantity <= 0) {
-                return back()->with('error', "Invalid quantity for {$room->name}.");
-            }
+        $booking = Booking::create([
+            'user_id' => Auth::id(),
+            'room_id' => $room->id,
+            'check_in' => $validated['check_in'],
+            'check_out' => $validated['check_out'],
+            'room_quantity' => $quantity,
+            'guest_count' => $validated['guest_count'],
+            'total_price' => $totalPrice,
+            'status' => 'pending',
+            'booking_code' => $bookingCode, 
+        ]);
 
-            if (!$room->isAvailable($validated['check_in'], $validated['check_out'], $quantity)) {
-                return back()->with('error', "Sorry, {$room->name} does not have enough available rooms for the chosen dates.");
-            }
-
-            $totalPrice = $room->price * $quantity * $nights;
-
-            $booking = Booking::create([
-                'user_id' => Auth::id(),
-                'room_id' => $roomId,
-                'check_in' => $validated['check_in'],
-                'check_out' => $validated['check_out'],
-                'room_quantity' => $quantity,
-                'guest_count' => $validated['guest_count'],
-                'total_price' => $totalPrice,
-                'status' => 'pending',
-                'booking_code' => $bookingCode, 
-            ]);
-
-            if (!$firstBookingId) {
-                $firstBookingId = $booking->id;
-            }
-        }
-
-        return redirect()->route('user.payment', ['booking_id' => $firstBookingId])
+        return redirect()->route('user.payment', ['booking_id' => $booking->id])
             ->with('success', 'Booking initiated successfully. Please complete your payment.');
     }
 
@@ -125,36 +118,6 @@ class BookingController extends Controller
         return redirect()->route('user.history')->with('success', 'Payment successful! Your booking is confirmed.');
     }
 
-    public function calculatePrice(Request $request)
-    {
-        $validated = $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date|after:check_in',
-            'quantity' => 'required|integer|min:1',
-        ]);
-
-        $room = Room::findOrFail($validated['room_id']);
-        $checkIn = \Carbon\Carbon::parse($validated['check_in'])->startOfDay();
-        $checkOut = \Carbon\Carbon::parse($validated['check_out'])->startOfDay();
-        $nights = (int) $checkOut->diff($checkIn)->days;
-        
-        if ($nights <= 0) {
-            $nights = 1;
-        }
-        
-        $quantity = $validated['quantity'];
-
-        $pricePerNight = $room->price;
-        $totalPrice = $pricePerNight * $quantity * $nights;
-
-        return response()->json([
-            'price_per_night' => $pricePerNight,
-            'nights' => $nights,
-            'quantity' => $quantity,
-            'total_price' => $totalPrice,
-        ]);
-    }
 
     public function checkAvailability(Request $request)
     {

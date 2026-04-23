@@ -25,7 +25,6 @@
             @if($hotel->images && count($hotel->images) > 0)
             <div class="gallery-row">
                 @foreach($hotel->images as $image)
-                {{-- 修复 1：相册小图也应用图片解析逻辑 --}}
                 <img src="{{ filter_var($image, FILTER_VALIDATE_URL) ? $image : route('photo.show', $image) }}" alt="Gallery" class="gallery-thumb" onmouseover="document.getElementById('mainImage').src=this.src;">
                 @endforeach
             </div>
@@ -49,7 +48,6 @@
         <div class="booking-left-col">
             <h2 class="section-heading">Select Dates & Rooms</h2>
 
-            {{-- 修复 2：增加错误提示框，这样如果提交失败，你就能看到后端报了什么错，而不是“没反应” --}}
             @if ($errors->any())
                 <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
                     <ul style="margin: 0; padding-left: 20px; font-weight: bold;">
@@ -86,10 +84,9 @@
                 <div class="room-card">
                     {{-- Room Image with fallback --}}
                     <div class="room-image-wrapper" style="margin-bottom: 15px;">
-                        <img src="{{ filter_var($room->image, FILTER_VALIDATE_URL) ? $room->image : route('photo.show', $room->image) }}" 
+                        <img src="{{ asset('/' . $room->image) }}" 
                             alt="{{ $room->name }}" 
-                            style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;"
-                            onerror="this.src='https://images.unsplash.com/photo-1631049307261-da0ec440d628?auto=format&fit=crop&w=500&q=60';">
+                            style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;">
                     </div>
                     <div class="room-header-flex">
                         <div>
@@ -104,19 +101,20 @@
                     </div>
 
                     <div class="room-actions">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="selected_rooms[]" value="{{ $room->id }}" class="room-checkbox" 
-                                   data-name="{{ $room->name }}" 
-                                   data-price="{{ $room->price }}" 
-                                   onchange="updateLiveSummary()">
-                            <span>Select Room</span>
+                        <label class="radio-label">
+                            <input type="radio" name="room_id" value="{{ $room->id }}" class="room-radio" 
+                                data-name="{{ $room->name }}" 
+                                data-price="{{ $room->price }}" 
+                                id="radio_room_{{ $room->id }}"
+                                onchange="updateLiveSummary()" required>
+                            <span style="font-weight: bold; margin-left: 5px;">Select This Room</span>
                         </label>
                         
-                        <div class="qty-group">
+                        <div class="qty-group" style="margin-top: 10px;">
                             <label>Qty:</label>
-                            <input type="number" name="room_quantities[{{ $room->id }}]" class="room-quantity form-control" 
-                                   data-room-id="{{ $room->id }}" value="1" min="1" max="{{ $room->total_rooms }}" 
-                                   onchange="updateLiveSummary()">
+                            <input type="number" name="room_quantity" id="qty_{{ $room->id }}" class="room-quantity form-control" 
+                                value="1" min="1" max="{{ $room->total_rooms }}" 
+                                onchange="updateLiveSummary()">
                         </div>
                     </div>
                     
@@ -178,17 +176,16 @@
     function updateLiveSummary() {
         const checkIn = document.getElementById('checkIn').value;
         const checkOut = document.getElementById('checkOut').value;
-        const selectedCheckboxes = document.querySelectorAll('.room-checkbox:checked');
+        const selectedRadio = document.querySelector('.room-radio:checked'); 
         const summaryContent = document.getElementById('liveSummaryContent');
         const btnProceed = document.getElementById('btnProceed');
 
-        if (!checkIn || !checkOut || selectedCheckboxes.length === 0) {
-            summaryContent.innerHTML = '<p class="text-muted text-center" style="color: #888;">Please select dates and at least one room to see pricing.</p>';
+        if (!checkIn || !checkOut || !selectedRadio) {
+            summaryContent.innerHTML = '<p class="text-muted text-center" style="color: #888;">Please select dates and one room type to see pricing.</p>';
             btnProceed.disabled = true;
             return;
         }
 
-        // Calculate nights using simple comparison
         const nights = calculateNights(checkIn, checkOut);
 
         if (nights <= 0) {
@@ -197,37 +194,27 @@
             return;
         }
 
-        let subtotal = 0;
-        let html = `<div class="summary-nights text-muted mb-2" style="color:#666;">
-            <strong>${formatDate(checkIn)}</strong> → <strong>${formatDate(checkOut)}</strong><br>
-            ${nights} Night(s) Stay
-        </div>`;
-        html += `<div class="summary-items">`;
+        const roomId = selectedRadio.value;
+        const name = selectedRadio.dataset.name;
+        const price = parseFloat(selectedRadio.dataset.price);
+        const qtyInput = document.getElementById('qty_' + roomId);
+        const qty = parseInt(qtyInput.value) || 1;
 
-        selectedCheckboxes.forEach(cb => {
-            const roomId = cb.value;
-            const name = cb.dataset.name;
-            const price = parseFloat(cb.dataset.price);
-            const qtyInput = document.querySelector(`.room-quantity[data-room-id="${roomId}"]`);
-            const qty = parseInt(qtyInput.value) || 1;
-
-            const roomTotal = price * qty * nights;
-            subtotal += roomTotal;
-
-            html += `
-                <div class="summary-item-row" style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                    <span class="item-name">${name} (x${qty})</span>
-                    <span class="item-price" style="font-weight:bold;">RM ${roomTotal.toFixed(2)}</span>
-                </div>
-            `;
-        });
-
-        html += `</div>`; 
-
+        const subtotal = price * qty * nights;
         const tax = subtotal * 0.06;
         const total = subtotal + tax;
 
-        html += `
+        let html = `
+            <div class="summary-nights text-muted mb-2" style="color:#666;">
+                <strong>${formatDate(checkIn)}</strong> → <strong>${formatDate(checkOut)}</strong><br>
+                ${nights} Night(s) Stay
+            </div>
+            <div class="summary-items">
+                <div class="summary-item-row" style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span class="item-name">${name} (x${qty} room)</span>
+                    <span class="item-price" style="font-weight:bold;">RM ${subtotal.toFixed(2)}</span>
+                </div>
+            </div>
             <div class="summary-totals mt-3" style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
                 <div class="summary-item-row text-muted" style="display:flex; justify-content:space-between; color:#666;">
                     <span>Subtotal</span>
@@ -245,9 +232,8 @@
         `;
 
         summaryContent.innerHTML = html;
-        btnProceed.disabled = false; // 启用按钮
+        btnProceed.disabled = false;
     }
-
     function submitBookingForm() {
         const form = document.getElementById('bookingForm');
         if (form.checkValidity()) {

@@ -16,26 +16,31 @@ class RoomSeeder extends Seeder
     {
         $hotels = Hotel::all();
 
+        // array of images for each room type
         $imagePools = [
             'single' => [
-                'https://images.unsplash.com/photo-1631049307261-da0ec440d628?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1598928506311-c55dd1b6e7d9?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1559841644-08984562005a?auto=format&fit=crop&w=500&q=60',
+                'images/single1.jpg',
+                'images/single2.jpg',
+                'images/single3.jpg',
+                // 'images/single4.jpg',
             ],
             'double' => [
-                'https://images.unsplash.com/photo-1631049552240-d8e8ba048cbb?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=500&q=60',
+                'images/double1.jpg',
+                'images/double2.jpg',
+                'images/double3.webp',
+                // 'images/double4.jpg',
             ],
             'queen' => [
-                'https://images.unsplash.com/photo-1584622614875-2f938757a188?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1595576508898-0ad5c879a061?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=500&q=60',
+                'images/queen1.jpg',
+                'images/queen2.jpg',
+                'images/queen3.jpg',
+                // 'images/queen4.jpg',
             ],
             'king' => [
-                'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&w=500&q=60',
-                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=500&q=60',
+                'images/king1.jpg',
+                'images/king2.jpg',
+                'images/king3.jpg',
+                // 'images/king4.jpg',
             ],
         ];
 

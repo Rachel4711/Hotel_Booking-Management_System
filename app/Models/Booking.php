@@ -20,7 +20,7 @@ class Booking extends Model
         'payment_status',
         'payment_method',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

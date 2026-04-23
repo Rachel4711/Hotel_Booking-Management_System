@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('address');
-            $table->string('state', 50); // use this to filter hotels by state in the search function
+            $table->string('state', 50);
             $table->integer('click_count')->default(0);
             $table->timestamps();
-            $table->text('policies')->nullable(); // For example: "No reduns”，“NO Smoking", "Has swimming pool"
-            $table->string('cover_image'); // cover image of hotel listing in home page
-            $table->json('images')->nullable(); // for multiple images and will be retrieved in hotel detail page
+            $table->text('policies')->nullable();
+            $table->string('cover_image');
+            $table->json('images')->nullable();
         });
     }
 
