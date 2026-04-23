@@ -7,7 +7,9 @@ use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class BookingController extends Controller
@@ -60,7 +62,7 @@ class BookingController extends Controller
         $tax = $subtotal * 0.06;
         $totalPrice = $subtotal + $tax;
 
-        $bookingCode = 'BKG-' . strtoupper(Str::random(8));
+        $bookingCode = Booking::generateCode();
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
@@ -118,6 +120,96 @@ class BookingController extends Controller
         return redirect()->route('user.history')->with('success', 'Payment successful! Your booking is confirmed.');
     }
 
+
+    public function history(Request $request)
+    {
+        $groups = Booking::with('room.hotel')
+            ->where('user_id', Auth::id())
+            ->orderByDesc('created_at')
+            ->get()
+            ->groupBy('booking_code');
+
+        $bookings = $groups->map(function ($rows) {
+            $first = $rows->first();
+            return (object) [
+                'booking_code'   => $first->booking_code,
+                'hotel'          => $first->room->hotel ?? null,
+                'check_in'       => $first->check_in,
+                'check_out'      => $first->check_out,
+                'guest_count'    => $first->guest_count,
+                'rooms_count'    => $rows->sum('room_quantity'),
+                'room_types'     => $rows->count(),
+                'total_price'    => $rows->sum('total_price'),
+                'status'         => $first->status,
+                'payment_status' => $first->payment_status,
+                'payment_method' => $first->payment_method,
+                'created_at'     => $first->created_at,
+            ];
+        })->values();
+
+        return view('User.history', compact('bookings'));
+    }
+
+    public function show($code)
+    {
+        $rows = Booking::with('room.hotel')
+            ->where('booking_code', $code)
+            ->where('user_id', Auth::id())
+            ->get();
+
+        if ($rows->isEmpty()) {
+            abort(404);
+        }
+
+        $first = $rows->first();
+        $checkIn = Carbon::parse($first->check_in)->startOfDay();
+        $checkOut = Carbon::parse($first->check_out)->startOfDay();
+        $nights = max(1, (int) $checkOut->diffInDays($checkIn));
+        $totalPrice = $rows->sum('total_price');
+        $canCancel = $first->status !== 'cancelled' && $checkIn->isFuture();
+
+        return view('User.Booking.show', [
+            'code'       => $code,
+            'rows'       => $rows,
+            'first'      => $first,
+            'hotel'      => $first->room->hotel ?? null,
+            'nights'     => $nights,
+            'totalPrice' => $totalPrice,
+            'canCancel'  => $canCancel,
+        ]);
+    }
+
+    public function cancel($code)
+    {
+        $rows = Booking::where('booking_code', $code)
+            ->where('user_id', Auth::id())
+            ->get();
+
+        if ($rows->isEmpty()) {
+            abort(404);
+        }
+
+        $first = $rows->first();
+
+        if ($first->status === 'cancelled') {
+            return redirect()->route('user.booking.show', $code)
+                ->with('error', 'This booking is already cancelled.');
+        }
+
+        if (!Carbon::parse($first->check_in)->startOfDay()->isFuture()) {
+            return redirect()->route('user.booking.show', $code)
+                ->with('error', 'Bookings with a past check-in date cannot be cancelled.');
+        }
+
+        DB::transaction(function () use ($code) {
+            Booking::where('booking_code', $code)
+                ->where('user_id', Auth::id())
+                ->update(['status' => 'cancelled']);
+        });
+
+        return redirect()->route('user.history')
+            ->with('success', "Booking {$code} has been cancelled.");
+    }
 
     public function checkAvailability(Request $request)
     {

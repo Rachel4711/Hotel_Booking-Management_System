@@ -4,6 +4,7 @@ use App\Models\Hotel;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HotelController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\HotelController as AdminHotelController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -124,10 +125,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/booking/{booking_id}/payment', [BookingController::class, 'showPayment'])->name('user.payment');
     Route::post('/booking/{booking_id}/payment', [BookingController::class, 'processPayment'])->name('user.payment.process');
 
-    // History Page
-    Route::get('/user/history', function () {
-        return view('User.history');
-    })->name('user.history');
+    // Booking history, details, cancel
+    Route::get('/user/history', [BookingController::class, 'history'])->name('user.history');
+    Route::get('/user/bookings/{code}', [BookingController::class, 'show'])->name('user.booking.show');
+    Route::post('/user/bookings/{code}/cancel', [BookingController::class, 'cancel'])->name('user.booking.cancel');
 });
 
 Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () {
@@ -159,11 +160,8 @@ Route::middleware(['auth', 'can:viewAny,App\\Models\\User'])->group(function () 
     Route::put('rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
-    Route::get('/bookings', function () {
-        return view('Admin.Booking.index');
-    })->name('bookings.index');
-    Route::get('/bookings/create', function () {
-        return view('Admin.Booking.create');
-    })->name('bookings.create');
+    Route::resource('/bookings', AdminBookingController::class)
+        ->parameters(['bookings' => 'booking'])
+        ->names('bookings');
 });
 
