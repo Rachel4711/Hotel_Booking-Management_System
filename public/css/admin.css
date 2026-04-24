@@ -419,6 +419,358 @@ HOTEL ADMIN PAGES
     flex:1;
 }
 
+/* ==================
+DASHBOARD ANALYTICS
+====================== */
+.dashboard-analytics{
+    margin-top:14px;
+    padding:16px;
+    border:1px solid #dbe3ea;
+    border-radius:12px;
+    background:#ffffff;
+}
+
+.analytics-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:14px;
+}
+
+.analytics-head h2{
+    margin:0;
+    color:#0f172a;
+    font-size:22px;
+}
+
+.analytics-head p{
+    margin:4px 0 0;
+    color:#64748b;
+    font-size:14px;
+}
+
+.analytics-total-bookings{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px 12px;
+    text-align:right;
+    min-width:150px;
+}
+
+.analytics-total-bookings span{
+    display:block;
+    color:#64748b;
+    font-size:12px;
+}
+
+.analytics-total-bookings strong{
+    display:block;
+    font-size:26px;
+    color:#0f172a;
+    line-height:1.1;
+}
+
+.analytics-grid{
+    display:grid;
+    grid-template-columns:260px minmax(0, 1fr);
+    gap:18px;
+    align-items:center;
+}
+
+.analytics-donut-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.analytics-donut{
+    width:190px;
+    height:190px;
+    border-radius:50%;
+    background:var(--donut-bg);
+    display:grid;
+    place-items:center;
+    box-shadow:inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+.analytics-donut-center{
+    width:118px;
+    height:118px;
+    border-radius:50%;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.analytics-donut-center span{
+    font-size:12px;
+    color:#64748b;
+}
+
+.analytics-donut-center strong{
+    font-size:28px;
+    color:#0f172a;
+    line-height:1;
+}
+
+.analytics-donut-center em{
+    font-style:normal;
+    color:#475569;
+    font-size:12px;
+}
+
+.analytics-details{
+    display:grid;
+    gap:12px;
+}
+
+.analytics-status-list{
+    display:grid;
+    gap:10px;
+}
+
+.analytics-status-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px 12px;
+    background:#ffffff;
+}
+
+.analytics-label-wrap{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.analytics-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+}
+
+.analytics-label{
+    color:#1e293b;
+    font-weight:600;
+}
+
+.analytics-values{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+}
+
+.analytics-values strong{
+    color:#0f172a;
+    font-size:18px;
+}
+
+.analytics-values span{
+    color:#64748b;
+    font-size:13px;
+}
+
+.analytics-stack{
+    height:18px;
+    border-radius:999px;
+    overflow:hidden;
+    display:flex;
+    background:#e2e8f0;
+}
+
+.analytics-stack span{
+    display:block;
+    height:100%;
+}
+
+.dashboard-revenue-analytics{
+    margin-top:14px;
+    padding:16px;
+    border:1px solid #dbe3ea;
+    border-radius:12px;
+    background:#ffffff;
+}
+
+.revenue-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:12px;
+}
+
+.revenue-head h2{
+    margin:0;
+    color:#0f172a;
+    font-size:22px;
+}
+
+.revenue-head p{
+    margin:4px 0 0;
+    color:#64748b;
+    font-size:14px;
+}
+
+.revenue-kpis{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:8px;
+    min-width:430px;
+}
+
+.revenue-kpis article{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px;
+}
+
+.revenue-kpis span{
+    display:block;
+    color:#64748b;
+    font-size:12px;
+}
+
+.revenue-kpis strong{
+    display:block;
+    color:#0f172a;
+    font-size:18px;
+    margin-top:4px;
+}
+
+.revenue-kpis article.revenue-up strong{
+    color:#047857;
+}
+
+.revenue-kpis article.revenue-down strong{
+    color:#b91c1c;
+}
+
+.revenue-chart-wrap{
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    padding:10px 12px 8px;
+}
+
+.revenue-chart{
+    width:100%;
+    height:auto;
+}
+
+.chart-grid-line{
+    stroke:#e2e8f0;
+    stroke-width:1;
+}
+
+.chart-grid-label{
+    fill:#64748b;
+    font-size:10px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.chart-area{
+    fill:rgba(37, 99, 235, 0.13);
+}
+
+.chart-line{
+    fill:none;
+    stroke:#2563eb;
+    stroke-width:3;
+    stroke-linejoin:round;
+    stroke-linecap:round;
+}
+
+.chart-point{
+    fill:#ffffff;
+    stroke:#1d4ed8;
+    stroke-width:2;
+}
+
+.revenue-x-axis{
+    margin-top:2px;
+    padding-left:26px;
+    padding-right:10px;
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.revenue-x-axis span{
+    color:#475569;
+    font-size:12px;
+    font-weight:600;
+}
+
+.revenue-foot{
+    margin-top:10px;
+    color:#334155;
+    font-size:14px;
+}
+
+.revenue-foot strong{
+    color:#0f172a;
+}
+
+@media (max-width: 980px){
+    .dashboard-stats{
+        grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .analytics-grid{
+        grid-template-columns:1fr;
+    }
+
+    .analytics-donut-wrap{
+        justify-content:flex-start;
+    }
+
+    .revenue-head{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .revenue-kpis{
+        min-width:0;
+    }
+}
+
+@media (max-width: 640px){
+    .dashboard-stats{
+        grid-template-columns:1fr !important;
+    }
+
+    .analytics-head{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .analytics-total-bookings{
+        text-align:left;
+    }
+
+    .revenue-kpis{
+        grid-template-columns:1fr;
+    }
+
+    .revenue-x-axis{
+        padding-left:8px;
+        padding-right:6px;
+    }
+
+    .revenue-x-axis span{
+        font-size:11px;
+    }
+}
+
 .hotel-filter-left .input{
     min-width:220px;
     max-width:320px;
