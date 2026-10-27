@@ -13,6 +13,17 @@
         if (filter_var($coverImage, FILTER_VALIDATE_URL)) return $coverImage;
         return route('photo.show', $coverImage);
     };
+
+    $getRoomImage = function ($room) {
+        $roomImage = $room->image ?? '';
+        if ($roomImage === '') return 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=900&q=80';
+        if (filter_var($roomImage, FILTER_VALIDATE_URL)) return $roomImage;
+        $roomImage = ltrim($roomImage, '/');
+        if (str_starts_with($roomImage, 'storage/')) {
+            $roomImage = substr($roomImage, 8);
+        }
+        return route('photo.show', $roomImage);
+    };
 @endphp
 
 @section('content')
@@ -82,9 +93,8 @@
             <div class="rooms-grid">
                 @forelse($hotel->rooms as $room)
                 <div class="room-card">
-                    {{-- Room Image with fallback --}}
                     <div class="room-image-wrapper" style="margin-bottom: 15px;">
-                        <img src="{{ asset('/' . $room->image) }}" 
+                        <img src="{{ $getRoomImage($room) }}" 
                             alt="{{ $room->name }}" 
                             style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;">
                     </div>
